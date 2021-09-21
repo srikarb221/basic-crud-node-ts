@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
-    saveFormDataController,
-    fetchFormDataController,
+    saveUserDataController,
+    fetchUserDataController,
     updateUserDataController,
     deleteUserDataController
 } from './formController'
@@ -9,10 +9,9 @@ import {
 
 const router = Router();
 
+router.post('/save', saveUserDataController);
 
-router.post('/save', saveFormDataController);
-
-router.get('/fetch', fetchFormDataController);
+router.get('/fetch', fetchUserDataController);
 
 router.put('/update', updateUserDataController);
 

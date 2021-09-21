@@ -1,16 +1,34 @@
-export interface IFieldState {
-    value: string;
-    error: boolean;
-    required: boolean;
+import { appendUserData, fetchAllUserData, updateUserData, deleteUserData } from './formUtils';
+import { IUserState, IFieldState, IApiResponse, IFetchData } from './formTypes';
+
+class User implements IUserState {
+    constructor(
+        public id: string,
+        public firstName: IFieldState,
+        public lastName: IFieldState,
+        public email: IFieldState,
+        public designation: IFieldState
+    ) { }
+
+    async saveUser(): Promise<IApiResponse> {
+        const response = appendUserData(this);
+        return response;
+    }
+
+    async updateUser(): Promise<IApiResponse> {
+        const response = await updateUserData(this);
+        return response
+    }
+
+    static getUsers(): IFetchData {
+        const response = fetchAllUserData();
+        return response;
+    }
+
+    async deleteUser(): Promise<IApiResponse> {
+        const response = await deleteUserData(this);
+        return response;
+    }
 }
 
-export interface IInFormState {
-    firstName: IFieldState,
-    lastName: IFieldState,
-    email: IFieldState,
-    designation: IFieldState
-}
-
-export interface IOutFormState extends IInFormState {
-    id: string;
-}
+export default User;
