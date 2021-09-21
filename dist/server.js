@@ -25,13 +25,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importStar(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const formRoutes_1 = __importDefault(require("./formRoutes"));
+const formController_1 = require("./formController");
 const app = express_1.default();
 app.use(express_1.json());
 app.use(cors_1.default());
 app.use('/', formRoutes_1.default);
-app.use((err, req, res, next) => {
-    res.status(500).json(err.message);
-});
+app.all('*', formController_1.handle404Controller);
 app.listen(3001, () => {
     console.log('listening on 3001.');
 });

@@ -1,54 +1,39 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchFormDataController = exports.deleteUserDataController = exports.updateUserDataController = exports.saveFormDataController = void 0;
-const formUtils_1 = require("./formUtils");
-const saveFormDataController = async (req, res) => {
-    let response = { code: 200, message: "success" };
-    const data = req.body;
-    try {
-        await formUtils_1.appendDataToJson(data);
-    }
-    catch (error) {
-        response.code = 500;
-        response.message = error;
-    }
+exports.handle404Controller = exports.fetchUserDataController = exports.deleteUserDataController = exports.updateUserDataController = exports.saveUserDataController = void 0;
+const formModels_1 = __importDefault(require("./formModels"));
+const apiResponseHandler_1 = __importDefault(require("./apiResponseHandler"));
+const saveUserDataController = async (req, res) => {
+    const { firstName, lastName, email, designation } = req.body;
+    const user = new formModels_1.default('', firstName, lastName, email, designation);
+    const response = await user.saveUser();
     res.status(response.code).send(response);
 };
-exports.saveFormDataController = saveFormDataController;
+exports.saveUserDataController = saveUserDataController;
 const updateUserDataController = async (req, res) => {
-    let response = { code: 200, message: "success" };
-    const data = req.body;
-    try {
-        await formUtils_1.updateUserData(data);
-    }
-    catch (error) {
-        response = { code: 500, message: error };
-    }
+    const { id, firstName, lastName, email, designation } = req.body;
+    const user = new formModels_1.default(id, firstName, lastName, email, designation);
+    const response = await user.updateUser();
     res.status(response.code).send(response);
 };
 exports.updateUserDataController = updateUserDataController;
 const deleteUserDataController = async (req, res) => {
-    let response = { code: 200, message: "success" };
-    const data = req.body;
-    try {
-        await formUtils_1.deleteUserData(data);
-    }
-    catch (error) {
-        response = { code: 500, message: error };
-    }
+    const { id, firstName, lastName, email, designation } = req.body;
+    const user = new formModels_1.default(id, firstName, lastName, email, designation);
+    const response = await user.deleteUser();
     res.status(response.code).send(response);
 };
 exports.deleteUserDataController = deleteUserDataController;
-const fetchFormDataController = async (req, res) => {
-    let response = {};
-    let code = 200;
-    try {
-        response = await formUtils_1.getJsonData();
-    }
-    catch (error) {
-        code = 500;
-        response = { code: 500, message: error };
-    }
-    res.status(code).send(response);
+const fetchUserDataController = async (req, res) => {
+    const response = await formModels_1.default.getUsers();
+    res.status(response.code).send(response);
 };
-exports.fetchFormDataController = fetchFormDataController;
+exports.fetchUserDataController = fetchUserDataController;
+const handle404Controller = (req, res) => {
+    const response = apiResponseHandler_1.default.handleError('404');
+    res.status(404).send(response);
+};
+exports.handle404Controller = handle404Controller;
